@@ -24,18 +24,39 @@ class DroneStrikeResponder extends Responder
         'an abandoned mine near',
         'downtown',
         'hocking pirated DVDs on the streets of',
-        'sailing in a hot air balloon over'
+        'sailing in a hot air balloon over',
+        'an opium den in',
+        'a tent city outside'
     );
     
     private static $locs = array(
+        array('name' => 'Albuquerque, NM', 'latitude' => 35.0826099, 'longitude' => -106.8169076),
+        array('name' => 'Black Rock City, NV', 'latitude' => 40.7859574, 'longitude' => -119.2234273),
         array('name' => 'Da Nang, Vietnam', 'latitude' => 16.0466742, 'longitude' => 108.206706),
         array('name' => 'Delhi, India', 'latitude' => 28.6454414, 'longitude' => 77.0907573),
+        array('name' => 'Djibouti, Africa', 'latitude' => 11.8234622, 'longitude' => 42.0264945),
+        array('name' => 'Easter Island', 'latitude' => -27.1258097, 'longitude' => -109.4090265),
+        array('name' => 'Gainesville, FL', 'latitude' => 29.6864011, 'longitude' => -82.3899579),
+        array('name' => 'Havana, Cuba', 'latitude' => 23.0509193, 'longitude' => -82.4731386),
         array('name' => 'Ho Chi Minh City, Vietnam', 'latitude' => 10.768451, 'longitude' => 106.6943626),
+        array('name' => 'Kahoʻolawe, Hawaii', 'latitude' => 20.5526138, 'longitude' => -156.6865398),
+        array('name' => 'Karachi, Pakistan', 'latitude' => 25.0115039, 'longitude' => 66.7838259),
+        array('name' => 'Key West, FL', 'latitude' => 24.5583954, 'longitude' => -81.7978063),
+        array('name' => 'Kokomo', 'latitude' => 25.0910105, 'longitude' => -77.40933),
+        array('name' => 'Mauritius', 'latitude' => -20.2004971, 'longitude' => 56.5514817),
         array('name' => 'Mexico City, Mexico', 'latitude' => 19.3907336, 'longitude' => -99.1436127),
         array('name' => 'Nashville, TN', 'latitude' => 36.1866405, 'longitude' => -86.7852455),
         array('name' => 'Omaha, NE', 'latitude' => 41.2918589, 'longitude' => -96.0812485),
+        array('name' => 'Rochester, MN', 'latitude' => 43.9961486, 'longitude' => -92.6215996),
+        array('name' => 'San Juan, Puerto Rico', 'latitude' => 18.3849764, 'longitude' => -66.1285536),
         array('name' => 'Shanghai, China', 'latitude' => 31.2243489, 'longitude' => 121.4767528),
-        array('name' => 'Tokyo, Japan', 'latitude' => 35.673343, 'longitude' => 139.710388)
+        array('name' => 'South of the Border, SC', 'latitude' => 34.497657, 'longitude' => -79.3182127),
+        array('name' => 'St. Petersburg, Russia', 'latitude' => 59.9174911, 'longitude' => 30.0441967),
+        array('name' => 'Tallinn, Estonia', 'latitude' => 59.4250582, 'longitude' => 24.5978164),
+        array('name' => 'Tehran, Iran', 'latitude' => 35.6970114, 'longitude' => 51.2093905),
+        array('name' => 'Tikrit, Iraq', 'latitude' => 34.6144649, 'longitude' => 43.5981679),
+        array('name' => 'Tokyo, Japan', 'latitude' => 35.673343, 'longitude' => 139.710388),
+        array('name' => 'Walt Disney World, Orlando', 'latitude' => 28.3852377, 'longitude' => -81.566068)
     );
     
     public function respond($redirect = false) {
@@ -44,9 +65,6 @@ class DroneStrikeResponder extends Responder
         }
         
         // TODO: add local time?
-        // TODO: figure out $this->communication?
-        // TODO: auto-parse the matches?
-        // TODO: add more locations
         // TODO: add collateral dmg (by the way, ...)
         
         $target = $this->matches[1];
@@ -59,10 +77,12 @@ class DroneStrikeResponder extends Responder
             'forecast.io_key' => $this->config['forecast.io_key'],
             'location' => array($loc['latitude'], $loc['longitude'])
         );
-        $weather = new WeatherResponder($weatherConfig, $this->communication, array('weather brief', 'weather', 'brief'), null);
+        preg_match('/' . WeatherResponder::$pattern . '/', 'weather brief', $weatherMatches);
+        $weather = new WeatherResponder($weatherConfig, $this->communication, $weatherMatches, null);
         $forecast = $weather->respond();
         
-        $ball = new EightBallResponder($this->config, $this->communication, array('8ball', array('8ball')), null);
+        preg_match('/' . EightBallResponder::$pattern . '/', '8ball', $ballMatches);
+        $ball = new EightBallResponder($this->config, $this->communication, $ballMatches, null);
         $permission = $ball->respond();
         if (EightBallResponder::isPositive($permission)) {
             $booms = str_repeat(':boom:', 5);
