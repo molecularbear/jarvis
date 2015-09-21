@@ -77,7 +77,6 @@ class DroneStrikeResponder extends Responder
             return 'forecast.io_key is required.';
         }
         
-        // TODO: add local time?
         // TODO: add collateral dmg (by the way, ...)
         
         $target = $this->matches[1];
@@ -86,14 +85,21 @@ class DroneStrikeResponder extends Responder
         $subloc = str_replace('{dir}', self::$dirs[rand(0, count(self::$dirs) - 1)], $subloc);
         $loc = self::$locs[rand(0, count(self::$locs) - 1)];
         
-        $weatherConfig = array(
-            'forecast.io_key' => $this->config['forecast.io_key'],
-            'location' => array($loc['latitude'], $loc['longitude'])
-        );
-        preg_match('/' . WeatherResponder::$pattern . '/', 'weather brief', $weatherMatches);
-        $weather = new WeatherResponder($weatherConfig, $this->communication, $weatherMatches, null);
-        $forecast = $weather->respond();
-        
+        // get weather and time at the location
+        $apikey = $this->config['forecast.io_key'];
+        $weatherUrl = "https://api.forecast.io/forecast/{$apikey}/{$loc['latitude']},{$loc['longitude']}";
+        $this->data = $this->request($weatherUrl, 600, 'weather'); // cache for 10 minutes
+        if (!is_object($this->data) || !is_object($this->data->currently)) {
+            $forecast = 'unknown';
+            $time = null;
+        }
+        else {
+            $temp = round($this->data->currently->temperature);
+            $forecast = "{$temp}°F, {$this->data->currently->summary}";
+            $date = new \DateTime("now", new \DateTimeZone($this->data->timezone));
+            $time = $date->format('g:ia');
+        }
+                
         preg_match('/' . EightBallResponder::$pattern . '/', '8ball', $ballMatches);
         $ball = new EightBallResponder($this->config, $this->communication, $ballMatches, null);
         $permission = $ball->respond();
@@ -109,7 +115,8 @@ class DroneStrikeResponder extends Responder
         return ":neutral_face: Sir, agents report a fix on high-value enemy combatant *$target*:\n" .
             "```\n" .
             "LOCATION: $subloc {$loc['name']}\n" .
-            "WEATHER: $forecast\n" .
+            "WEATHER: $forecast" .
+            ($time ? " ...... LOCAL TIME: $time\n" : "\n") .
             "```\n" .
             ":angry: Do we have permission to neutralize the target?\n" .
             ":guardsman: _{$permission}._\n$mission";
