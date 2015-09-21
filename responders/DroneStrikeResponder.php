@@ -72,28 +72,12 @@ class DroneStrikeResponder extends Responder
         array('name' => 'Zanzibar, Tanzania', 'latitude' => -6.1659168, 'longitude' => 39.1938862)
     );
     
-    private static $bystanders = array(
-        ':baby:',
-        ':bicyclist:',
-        ':church:',
-        ':dog:',
-        ':factory:',
-        ':family:',
-        ':goat:',
-        ':hospital:',
-        ':moyai:',
-        ':panda_face:',
-        ':princess:',
-        ':santa:',
-        ':scream_cat:',
-        ':school:',
-        ':tiger:'
-    );
-    
     public function respond($redirect = false) {
         if (!$this->requireConfig(array('forecast.io_key'))) {
             return 'forecast.io_key is required.';
         }
+        
+        // TODO: add collateral dmg (by the way, ...)
         
         $target = $this->matches[1];
         $subloc = self::$sublocs[rand(0, count(self::$sublocs) - 1)];
@@ -113,26 +97,16 @@ class DroneStrikeResponder extends Responder
             $temp = round($this->data->currently->temperature);
             $forecast = "{$temp}°F, {$this->data->currently->summary}";
             $date = new \DateTime("now", new \DateTimeZone($this->data->timezone));
-            $time = $date->format('g:i a');
+            $time = $date->format('g:ia');
         }
                 
         preg_match('/' . EightBallResponder::$pattern . '/', '8ball', $ballMatches);
         $ball = new EightBallResponder($this->config, $this->communication, $ballMatches, null);
         $permission = $ball->respond();
         if (EightBallResponder::isPositive($permission)) {
-            $collateral = rand(1, 5);
-            $bystanders = self::$bystanders; // clone
-            $damage = '';
-            for ($i = 0; $i < $collateral; $i++) {
-                $idx = rand(0, count($bystanders) - 1);
-                $damage .= $bystanders[$idx];
-                unset($bystanders[$idx]);
-                $bystanders = array_values($bystanders);
-            }
             $booms = str_repeat(':boom:', 5);
             $mission = ":airplane: ... :three: ... :two: ... :one: ... $booms\n" .
-                ":smiley: We have visual on *$target's* smoldering corpse - mission accomplished!\n" .
-                "\t(:unamused: by the way, there was some collateral damage: $damage)";
+                ":smiley: We have visual on *$target's* smoldering corpse - mission accomplished!";
         }
         else {
             $mission = ':disappointed: Understood, sir. Mission aborted.';
