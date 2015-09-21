@@ -30,8 +30,10 @@ class DroneStrikeResponder extends Responder
     );
     
     private static $locs = array(
+        array('name' => 'Abu Dhabi, UAE', 'latitude' => 24.3862905, 'longitude' => 54.2797189),
         array('name' => 'Albuquerque, NM', 'latitude' => 35.0826099, 'longitude' => -106.8169076),
         array('name' => 'Black Rock City, NV', 'latitude' => 40.7859574, 'longitude' => -119.2234273),
+        array('name' => 'Bogota, Colombia', 'latitude' => 4.6482837, 'longitude' => -74.247893),
         array('name' => 'Da Nang, Vietnam', 'latitude' => 16.0466742, 'longitude' => 108.206706),
         array('name' => 'Delhi, India', 'latitude' => 28.6454414, 'longitude' => 77.0907573),
         array('name' => 'Djibouti, Africa', 'latitude' => 11.8234622, 'longitude' => 42.0264945),
@@ -45,18 +47,29 @@ class DroneStrikeResponder extends Responder
         array('name' => 'Kokomo', 'latitude' => 25.0910105, 'longitude' => -77.40933),
         array('name' => 'Mauritius', 'latitude' => -20.2004971, 'longitude' => 56.5514817),
         array('name' => 'Mexico City, Mexico', 'latitude' => 19.3907336, 'longitude' => -99.1436127),
+        array('name' => 'Mt. Kilimanjaro, Tanzania', 'latitude' => -3.0674246, 'longitude' => 37.3468725),
         array('name' => 'Nashville, TN', 'latitude' => 36.1866405, 'longitude' => -86.7852455),
+        array('name' => 'Neuschwanstein Castle, Germany', 'latitude' => 47.557574, 'longitude' => 10.7476117),
         array('name' => 'Omaha, NE', 'latitude' => 41.2918589, 'longitude' => -96.0812485),
+        array('name' => 'Panamá City, Panama', 'latitude' => 9.0831986, 'longitude' => -79.5924652),
+        array('name' => 'Phuket, Thailand', 'latitude' => 7.8833605, 'longitude' => 98.3744039),
+        array('name' => 'Prague, Czech Republic', 'latitude' => 50.0595854, 'longitude' => 14.3255418),
+        array('name' => 'Rio de Janeiro, Brazil', 'latitude' => -22.0626323, 'longitude' => -44.044488),
         array('name' => 'Rochester, MN', 'latitude' => 43.9961486, 'longitude' => -92.6215996),
+        array('name' => 'the Ross Ice Shelf, Antarctica', 'latitude' => -81.4999691, 'longitude' => -175.0021619),
+        array('name' => 'Ross River, Yukon Territory', 'latitude' => 61.9717011, 'longitude' => -132.4854746),
         array('name' => 'San Juan, Puerto Rico', 'latitude' => 18.3849764, 'longitude' => -66.1285536),
         array('name' => 'Shanghai, China', 'latitude' => 31.2243489, 'longitude' => 121.4767528),
         array('name' => 'South of the Border, SC', 'latitude' => 34.497657, 'longitude' => -79.3182127),
         array('name' => 'St. Petersburg, Russia', 'latitude' => 59.9174911, 'longitude' => 30.0441967),
         array('name' => 'Tallinn, Estonia', 'latitude' => 59.4250582, 'longitude' => 24.5978164),
+        array('name' => 'Tangiers, Morocco', 'latitude' => 35.7632488, 'longitude' => -5.9034189),
         array('name' => 'Tehran, Iran', 'latitude' => 35.6970114, 'longitude' => 51.2093905),
         array('name' => 'Tikrit, Iraq', 'latitude' => 34.6144649, 'longitude' => 43.5981679),
+        array('name' => 'Timbuktu, Mali', 'latitude' => 16.7713828, 'longitude' => -3.025489),
         array('name' => 'Tokyo, Japan', 'latitude' => 35.673343, 'longitude' => 139.710388),
-        array('name' => 'Walt Disney World, Orlando', 'latitude' => 28.3852377, 'longitude' => -81.566068)
+        array('name' => 'Walt Disney World, Orlando', 'latitude' => 28.3852377, 'longitude' => -81.566068),
+        array('name' => 'Zanzibar, Tanzania', 'latitude' => -6.1659168, 'longitude' => 39.1938862)
     );
     
     public function respond($redirect = false) {
