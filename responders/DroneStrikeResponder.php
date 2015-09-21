@@ -77,8 +77,6 @@ class DroneStrikeResponder extends Responder
             return 'forecast.io_key is required.';
         }
         
-        // TODO: add collateral dmg (by the way, ...)
-        
         $target = $this->matches[1];
         $subloc = self::$sublocs[rand(0, count(self::$sublocs) - 1)];
         $subloc = str_replace('{fives}', rand(1, 4) * 5, $subloc);
