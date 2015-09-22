@@ -72,6 +72,23 @@ class DroneStrikeResponder extends Responder
         array('name' => 'Zanzibar, Tanzania', 'latitude' => -6.1659168, 'longitude' => 39.1938862)
     );
     
+    private static function isPositive8Ball($response) {
+        switch ($response) {
+            case 'It is certain':
+            case 'It is decidedly so':
+            case 'Without a doubt':
+            case 'Yes definitely':
+            case 'You may rely on it':
+            case 'As I see it, yes':
+            case 'Most likely':
+            case 'Outlook good':
+            case 'Yes':
+            case 'Signs point to yes':
+                return true;
+            default: return false;
+        }
+    }
+    
     public function respond($redirect = false) {
         if (!$this->requireConfig(array('forecast.io_key'))) {
             return 'forecast.io_key is required.';
@@ -97,11 +114,9 @@ class DroneStrikeResponder extends Responder
             $date = new \DateTime("now", new \DateTimeZone($this->data->timezone));
             $time = $date->format('g:ia');
         }
-                
-        preg_match('/' . EightBallResponder::$pattern . '/', '8ball', $ballMatches);
-        $ball = new EightBallResponder($this->config, $this->communication, $ballMatches, null);
-        $permission = $ball->respond();
-        if (EightBallResponder::isPositive($permission)) {
+        
+        $permission = $this->callResponder('EightBall', '8ball');
+        if (self::isPositive8Ball($permission)) {
             $booms = str_repeat(':boom:', 5);
             $mission = ":airplane: ... :three: ... :two: ... :one: ... $booms\n" .
                 ":smiley: We have visual on *$target's* smoldering corpse - mission accomplished!";
