@@ -106,7 +106,7 @@ class DroneStrikeResponder extends Responder
         $this->data = $this->request($weatherUrl, 600, 'weather'); // cache for 10 minutes
         if (!is_object($this->data) || !is_object($this->data->currently)) {
             $forecast = 'unknown';
-            $time = null;
+            $time = date('g:ia');
         }
         else {
             $temp = round($this->data->currently->temperature);
@@ -128,8 +128,7 @@ class DroneStrikeResponder extends Responder
         return ":neutral_face: Sir, agents report a fix on high-value enemy combatant *$target*:\n" .
             "```\n" .
             "LOCATION: $subloc {$loc['name']}\n" .
-            "WEATHER: $forecast" .
-            ($time ? " ...... LOCAL TIME: $time\n" : "\n") .
+            "CONDITIONS: $time, $forecast\n" .
             "```\n" .
             ":angry: Do we have permission to neutralize the target?\n" .
             ":guardsman: _{$permission}._\n$mission";
